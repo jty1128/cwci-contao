@@ -1,7 +1,8 @@
 name: CI
 
 on:
-    pull_request: ~
+    pull_request:
+        branches: [cwci-327f7b28e8c38d55c1a3-base]
 
 permissions:
     contents: read
@@ -9,7 +10,7 @@ permissions:
 jobs:
     rector:
         name: Rector
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -37,7 +38,7 @@ jobs:
 
     ecs:
         name: ECS
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -65,7 +66,7 @@ jobs:
 
     ecs-legacy:
         name: ECS legacy
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -98,7 +99,7 @@ jobs:
 
     phpstan:
         name: PHPStan
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -126,7 +127,7 @@ jobs:
 
     yamllint:
         name: YAMLlint
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         steps:
             - name: Checkout
               uses: actions/checkout@v4
@@ -139,7 +140,7 @@ jobs:
 
     service-linter:
         name: Service linter
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -167,7 +168,7 @@ jobs:
 
     depcheck:
         name: Depcheck
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -206,7 +207,7 @@ jobs:
 
     tests:
         name: PHP ${{ matrix.php }}
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         strategy:
             fail-fast: false
             matrix:
@@ -248,7 +249,7 @@ jobs:
 
     reverse:
         name: Reverse order
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -269,45 +270,9 @@ jobs:
             - name: Run the unit tests in reverse order
               run: vendor/bin/phpunit --order-by=reverse --extensions Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher
 
-    nightly:
-        name: PHP nightly
-        runs-on: ubuntu-latest
-        continue-on-error: true
-        steps:
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: nightly
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-                  coverage: none
-
-            - name: Initialize the database
-              run: |
-                  sudo systemctl start mysql.service
-                  mysql -uroot -proot -e "CREATE database contao_test"
-
-            - name: Checkout
-              uses: actions/checkout@v4
-              with:
-                  show-progress: false
-                  persist-credentials: false
-
-            - name: Install Contao
-              uses: ramsey/composer-install@v3
-              with:
-                  composer-options: --ignore-platform-req=php+
-
-            - name: Run the unit tests
-              run: vendor/bin/phpunit
-
-            - name: Run the functional tests
-              run: vendor/bin/phpunit --testsuite=functional
-              env:
-                  DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
-
     prefer-lowest:
         name: Prefer lowest
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -347,7 +312,7 @@ jobs:
 
     bundles:
         name: Bundles
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -390,7 +355,7 @@ jobs:
 
     monorepo-check:
         name: Monorepo check
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
